@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/souvenirs")
 public class SouvenirController {
+
     private final String UPLOAD_DIR = "C:/intel/souvenir";  // 图片上传路径
 
     @Autowired
@@ -43,19 +44,19 @@ public class SouvenirController {
         }
 
         souvenirService.save(souvenir);
-        return new Result();
+        return new Result("200", souvenir, "保存纪念品成功");
     }
 
     /**
      * 更新纪念品
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Souvenir> updateSouvenir(@PathVariable Long id,
-                                                   @RequestParam(value = "file", required = false) MultipartFile file,
-                                                   @RequestBody Souvenir souvenir) throws IOException {
+    public Result updateSouvenir(@PathVariable Long id,
+                                 @RequestParam(value = "file", required = false) MultipartFile file,
+                                 @RequestBody Souvenir souvenir) throws IOException {
         Souvenir existingSouvenir = souvenirService.getById(id);
         if (existingSouvenir == null) {
-            return ResponseEntity.notFound().build();
+            return new Result("404", null, "找不到该纪念品");
         }
 
         if (!file.isEmpty()) {
@@ -81,17 +82,17 @@ public class SouvenirController {
 
         souvenir.setId(id);
         souvenirService.updateById(souvenir);
-        return ResponseEntity.ok(souvenir);
+        return new Result("200", souvenir, "更新纪念品成功");
     }
 
     /**
      * 删除纪念品
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSouvenir(@PathVariable Long id) {
+    public Result deleteSouvenir(@PathVariable Long id) {
         Souvenir existingSouvenir = souvenirService.getById(id);
         if (existingSouvenir == null) {
-            return ResponseEntity.notFound().build();
+            return new Result("404", null, "找不到该纪念品");
         }
 
         // 删除图片文件
@@ -101,55 +102,55 @@ public class SouvenirController {
         }
 
         souvenirService.removeById(id);
-        return ResponseEntity.noContent().build();
+        return new Result("204", null, "删除纪念品成功");
     }
 
     /**
      * 获取所有纪念品列表
      */
     @GetMapping("/")
-    public ResponseEntity<List<Souvenir>> getAllSouvenirs() {
+    public Result getAllSouvenirs() {
         List<Souvenir> souvenirs = souvenirService.list();
         if (souvenirs.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return new Result("204", null, "没有找到纪念品");
         }
-        return ResponseEntity.ok(souvenirs);
+        return new Result("200", souvenirs, "获取所有纪念品成功");
     }
 
     /**
      * 分页获取纪念品列表
      */
     @GetMapping("/page")
-    public ResponseEntity<Page<Souvenir>> getSouvenirPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                                                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+    public Result getSouvenirPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         Page<Souvenir> page = new Page<>(pageNum, pageSize);
         souvenirService.page(page);
         if (page.getRecords().isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return new Result("204", null, "没有找到纪念品");
         }
-        return ResponseEntity.ok(page);
+        return new Result("200", page, "分页获取纪念品列表成功");
     }
 
     /**
      * 通过ID查找纪念品
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Souvenir> getSouvenirById(@PathVariable Long id) {
+    public Result getSouvenirById(@PathVariable Long id) {
         Souvenir souvenir = souvenirService.getById(id);
         if (souvenir == null) {
-            return ResponseEntity.notFound().build();
+            return new Result("404", null, "找不到该纪念品");
         }
-        return ResponseEntity.ok(souvenir);
+        return new Result("200", souvenir, "获取纪念品详情成功");
     }
 
     /**
      * 通过ID删除纪念品
      */
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Void> deleteSouvenirById(@PathVariable Long id) {
+    public Result deleteSouvenirById(@PathVariable Long id) {
         Souvenir existingSouvenir = souvenirService.getById(id);
         if (existingSouvenir == null) {
-            return ResponseEntity.notFound().build();
+            return new Result("404", null, "找不到该纪念品");
         }
 
         // 删除图片文件
@@ -159,22 +160,22 @@ public class SouvenirController {
         }
 
         souvenirService.removeById(id);
-        return ResponseEntity.noContent().build();
+        return new Result("204", null, "删除纪念品成功");
     }
 
     /**
      * 查找纪念品（根据名称）
      */
     @GetMapping("/find")
-    public ResponseEntity<List<Souvenir>> findSouvenirsByName(@RequestParam(value = "name", required = false) String name) {
+    public Result findSouvenirsByName(@RequestParam(value = "name", required = false) String name) {
         QueryWrapper<Souvenir> queryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(name)) {
             queryWrapper.like("name", "%" + name + "%");
         }
         List<Souvenir> souvenirs = souvenirService.list(queryWrapper);
         if (souvenirs.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return new Result("204", null, "没有找到符合条件的纪念品");
         }
-        return ResponseEntity.ok(souvenirs);
+        return new Result("200", souvenirs, "查找纪念品成功");
     }
 }
