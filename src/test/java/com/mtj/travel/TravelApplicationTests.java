@@ -1,10 +1,10 @@
-package com.mtj.traval;
+package com.mtj.travel;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TravalApplicationTests {
+class TravelApplicationTests {
 
     @Test
     void contextLoads() {

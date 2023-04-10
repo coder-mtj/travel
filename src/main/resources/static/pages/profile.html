@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Update Profile Example</title>
+</head>
+<body>
+<div id="app">
+    <form @submit.prevent="updateProfile">
+        <label for="username">用户名：</label>
+        <input type="text" v-model="user.username" required /><br /><br />
+
+        <label for="phoneNumber">手机号码：</label>
+        <input
+                type="tel"
+                v-model="user.phoneNumber"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+        /><br /><br />
+
+        <label for="newPassword">新密码：</label>
+        <input type="password" v-model="newPassword" /><br /><br />
+
+        <label for="confirmPassword">确认密码：</label>
+        <input type="password" v-model="confirmPassword" /><br /><br />
+
+        <img :src="avatarUrl" alt="Avatar Preview" width="100" height="100" />
+
+        <br /><br />
+        <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" />
+        <button type="submit">更新资料</button>
+    </form>
+</div>
+-->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<!-- 导入 axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const { ref } = Vue;
+    const app = Vue.createApp({
+        setup() {
+            const user = JSON.parse(localStorage.getItem("userInfo"));
+            const avatarFileName = user.avatarUrl;
+            const avatarUrl = ref(
+                avatarFileName
+                    ? `/download/${encodeURIComponent(avatarFileName)}`
+                    : user.avatarUrl
+            );
+            const file = ref(null);
+            const newPassword = ref("");
+            const confirmPassword = ref("");
+
+            const updateProfile = () => {
+                if (newPassword.value !== confirmPassword.value) {
+                    alert("两次输入的密码不一致，请重新输入");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("id", user.id);
+                formData.append("username", user.username);
+                formData.append("phoneNumber", user.phoneNumber);
+                formData.append("password", newPassword.value);
+                if (file.value != null) {
+                    formData.append("avatar", file.value);
+                }
+                axios
+                    .put("/users", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    })
+                    .then((response) => {
+                        console.log(`更新用户资料成功：${response.data}`);
+                        if (newPassword.value !== "") {
+                            // 更新本地存储中的用户信息
+                            user.password = newPassword.value;
+                            localStorage.setItem("userInfo", JSON.stringify(user));
+                        }
+                        if (file.value != null) {
+                            localStorage.setItem(
+                                "avatarFileName",
+                                JSON.parse(response.data).data
+                            );
+                            avatarUrl.value = `/download/${encodeURIComponent(
+                                JSON.parse(response.data).data
+                            )}`;
+                        }
+                        alert("更新用户资料成功");
+                    })
+                    .catch((error) => {
+                        console.error(`更新用户资料失败：${error}`);
+                        alert("更新用户资料失败，请稍后重试");
+                    });
+            };
+
+            const onFileChange = (event) => {
+                if (event.target.files.length > 0) {
+                    file.value = event.target.files[0];
+                    if (file.value.type.indexOf("image") === -1) {
+                        alert("请选择一张图片文件");
+                        event.target.value = "";
+                        file.value = null;
+                        avatarUrl.value = user.avatarUrl;
+                    } else if (file.value.size > 1024 * 1024 * 2) {
+                        alert("文件大小不能超过2MB");
+                        event.target.value = "";
+                        file.value = null;
+                        avatarUrl.value = user.avatarUrl;
+                    } else {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            avatarUrl.value = reader.result;
+                        };
+                        reader.readAsDataURL(file.value);
+                    }
+                } else {
+                    file.value = null;
+                    avatarUrl.value = avatarFileName
+                        ? `/download/${encodeURIComponent(avatarFileName)}`
+                        : user.avatarUrl;
+                }
+            };
+
+            return { user, avatarUrl, file, newPassword, confirmPassword, updateProfile, onFileChange };
+        },
+    });
+    app.mount("#app");
+</script>
+</body>
+</html>

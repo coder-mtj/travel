@@ -1,13 +1,13 @@
-package com.mtj.traval;
+package com.mtj.travel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TravalApplication {
+public class TravelApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TravalApplication.class, args);
+        SpringApplication.run(TravelApplication.class, args);
     }
 
 }

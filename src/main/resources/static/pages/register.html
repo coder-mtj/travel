@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<form id="register-form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" maxlength="11"><br><br>
+    <label for="avatar">Avatar:</label>
+    <input type="file" id="avatar" name="avatar"><br><br>
+    <button type="submit">Register</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    var form = document.getElementById('register-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var formData = new FormData(form);
+
+        if (document.getElementById('phoneNumber').value.length > 0) {
+            formData.set('phoneNumber', document.getElementById('phoneNumber').value);
+        }
+
+        var fileInput = document.getElementById('avatar');
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            formData.append('avatar', file, file.name);
+        }
+
+        axios.post('http://localhost:8080/users/register', formData)
+            .then(function(response) {
+                console.log('注册成功：' + response.data);
+                // 在页面上显示注册结果
+                alert('注册成功');
+            })
+            .catch(function(error) {
+                console.error('注册失败：' + error);
+                alert('注册失败，请重试');
+            });
+    });
+</script>
+</body>
+</html>
