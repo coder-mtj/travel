@@ -14,5 +14,4 @@ public class Souvenir {
     private String description;  // 纪念品描述
     private String url;  // 存储url字段
     private String story;  // 纪念品故事
-
 }

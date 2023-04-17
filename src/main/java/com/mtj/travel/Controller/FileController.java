@@ -75,6 +75,31 @@ public class FileController {
         outputStream.close();
         inputStream.close();
     }
+    @GetMapping("/abDownLoad")
+    public void download2(@RequestParam("filePath") String filePath, HttpServletResponse response) throws IOException {
+        log.info("download开始工作");
+        // 从磁盘读取文件内容并构造输入流
+        Path file = Paths.get(filePath);
+        InputStream inputStream = Files.newInputStream(file);
+
+        // 获取 MIME 类型
+        String mimeType = URLConnection.guessContentTypeFromStream(inputStream);
+
+        // 设置 HTTP 响应头信息
+        response.setContentType(mimeType);
+        response.setHeader("Content-Disposition", "attachment; filename=" + encodeFilename(file.getFileName().toString()));
+
+        // 将文件内容写入 HTTP 响应输出流
+        ServletOutputStream outputStream = response.getOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+    }
 
     private String encodeFilename(String fileName) {
         try {

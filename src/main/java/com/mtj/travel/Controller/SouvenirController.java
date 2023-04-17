@@ -28,24 +28,27 @@ public class SouvenirController {
     /**
      * 保存纪念品
      */
-    @PostMapping("/")
+    @PostMapping
     public Result saveSouvenir(@RequestParam("file") MultipartFile file,
                                @RequestBody Souvenir souvenir) throws IOException {
+
         if (!file.isEmpty()) {
             // 保存图片文件
-            File dir = new File(UPLOAD_DIR);
+            String dirPath = "C:/intel"; // 将上传目录设置为C盘下的intel文件夹，您可以自行修改这个目录路径。
+            File dir = new File(dirPath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
-            File uploadFile = new File(dir.getAbsolutePath() + "/" + filename);
+            File uploadFile = new File(dir.getAbsolutePath() + "\\" + filename);
             file.transferTo(uploadFile);
-            souvenir.setUrl(uploadFile.getAbsolutePath());
+            souvenir.setUrl(uploadFile.getAbsolutePath()); // 将图片保存路径设置到 souvenir 对象的 url 属性中
         }
 
         souvenirService.save(souvenir);
         return new Result("200", souvenir, "保存纪念品成功");
     }
+
 
     /**
      * 更新纪念品
@@ -59,14 +62,15 @@ public class SouvenirController {
             return new Result("404", null, "找不到该纪念品");
         }
 
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             // 保存图片文件
-            File dir = new File(UPLOAD_DIR);
+            String dirPath = "C:/intel"; // 将上传目录设置为C盘下的intel文件夹，您可以自行修改这个目录路径。
+            File dir = new File(dirPath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
-            File uploadFile = new File(dir.getAbsolutePath() + "/" + filename);
+            File uploadFile = new File(dir.getAbsolutePath() + "\\" + filename);
             file.transferTo(uploadFile);
             souvenir.setUrl(uploadFile.getAbsolutePath());
 
@@ -84,6 +88,7 @@ public class SouvenirController {
         souvenirService.updateById(souvenir);
         return new Result("200", souvenir, "更新纪念品成功");
     }
+
 
     /**
      * 删除纪念品
