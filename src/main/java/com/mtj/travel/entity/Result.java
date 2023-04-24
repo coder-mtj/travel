@@ -13,9 +13,4 @@ public class Result {
         this.data = data;
         this.msg = msg;
     }
-
-    @Override
-    public String toString() {
-        return "{" + "code:'" + code + '\'' + ", data:" + data + ", msg:'" + msg + '\'' + '}';
-    }
 }

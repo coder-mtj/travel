@@ -19,7 +19,8 @@ public class ScenicArea {
     private String address;
     private String type;
     private String description;
-    @TableField(typeHandler = com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler.class) // 使用 JacksonTypeHandler 来处理 JSON 数据
+    @TableField(typeHandler = com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler.class)
+    // 使用 JacksonTypeHandler 来处理 JSON 数据
     private String picture;
     @TableField("Open_Time")
     private Time openTime;

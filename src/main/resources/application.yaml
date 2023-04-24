@@ -27,3 +27,6 @@ mybatis-plus:
       id-type: assign_id
 
 
+MyConfig:
+  UrlBase: "C://intel"
+
