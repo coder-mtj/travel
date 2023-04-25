@@ -11,11 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
-    private final static String[] ALLOWED_URIS = {
-            "/users/login",
-            "/pages/login.html",
-            "/index.html"
-    };
+    private final static String[] ALLOWED_URIS = {"/users/login", "/pages/login.html", "/index.html"};
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -35,6 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         return true;
     }
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
