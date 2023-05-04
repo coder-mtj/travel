@@ -17,17 +17,14 @@ public class Session implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
+    private String id;
 
     @TableField("scenic_area_name")
     private String scenicAreaName;
 
-    @TableField("session_date")
-    private Date sessionDate;
-
-    @TableField("session_time")
-    private Date sessionTime;
+    @TableField("session_datetime")
+    private Date sessionDateTime;
 
     @TableField("session_location")
     private String sessionLocation;
