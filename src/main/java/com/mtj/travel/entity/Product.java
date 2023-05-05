@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@TableName("products")
+@TableName("product")
 public class Product {
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;                   // 产品编号
