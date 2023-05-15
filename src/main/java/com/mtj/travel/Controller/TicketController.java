@@ -149,4 +149,13 @@ public class TicketController {
         return new Result("404", null, "实体不存在");
     }
 
+    /**
+     * 买票
+     */
+    @GetMapping(value = "{userId}/{ticketId}")
+    public Result purchaseTicket(@PathVariable String userId, @PathVariable String ticketId)
+    {
+        return null;
+    }
+
 }
