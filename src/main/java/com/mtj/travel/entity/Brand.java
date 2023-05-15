@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Brand {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    private int id;
+    private String id;
     private String name;
     private String logoUrl;
     private String description;

@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 public class Session implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long saerialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.ASSIGN_UUID)
     private String id;
